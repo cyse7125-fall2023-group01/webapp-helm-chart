@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  POSTGRES_HOST: {{ .Values.configMap.POSTGRES_HOST }}
+  DATABASE_DSN: {{ .Values.configMap.DATABASE_DSN }}
