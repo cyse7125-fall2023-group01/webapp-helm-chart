@@ -29,7 +29,7 @@ jobs:
           node-version: "lts/*"
         env:
           GITHUB_TOKEN: ${{secrets.SRI_HARSHA_GITHUB_TOKEN}}
-      - run: npm install -g semantic-release @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/changelog @semantic-release/npm @semantic-release/git 
+      - run: npm install -g semantic-release @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/changelog -D @semantic-release/github @semantic-release/git 
 
       - name: Release Tag
         env:
