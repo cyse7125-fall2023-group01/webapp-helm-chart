@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.webappService.name }}
+spec:
+  selector:
+    {{- with .Values.webappService.selector }}
+    {{- toYaml . | nindent 4 }}
+    {{- else }}
+    app: webapp
+    {{- end }}
+  ports:
+    - protocol: TCP
+      port: {{ .Values.webappService.port }}
+      targetPort: {{ .Values.webappService.port }}
+  {{- if eq .Values.webappService.serviceType "LoadBalancer" }}
+  type: LoadBalancer
+  {{- end }}

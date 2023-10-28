@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:  # Add the selector here
+    matchLabels:
+      app: webapp
+  strategy:
+    type: {{ .Values.deploymentStrategy }}
+    rollingUpdate:
+      maxSurge: {{ .Values.maxSurge }}
+      maxUnavailable: {{ .Values.maxUnavailable }}
+  template:
+    metadata:
+      labels:
+        app: webapp  
+    spec:
+      initContainers:
+        - name: flyway-init
+          image: flyway/flyway
+          command:
+            - "flyway"
+          env:
+            - name: POSTGRES_HOST
+              value: postgres-headless
+            - name: DB_URL
+              value: jdbc:postgresql://$(POSTGRES_HOST):5432/app
+      containers:
+        - name: webapp
+          image: {{ .Values.webappImage.repository }}:{{ .Values.webappImage.tag }}
+          env:
+            - name: POSTGRES_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: POSTGRES_HOST
+            - name: DATABASE_DSN
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: DATABASE_DSN
+          readinessProbe:
+            initialDelaySeconds: {{ .Values.minReadySeconds }}
+            periodSeconds: 5 
+            httpGet:
+              path: /healthz  
+              port: 8080      
+            
+         
+          ports:
+            - containerPort: 80
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      

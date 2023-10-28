@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-postgres
+spec:
+  selector:
+    matchLabels:
+      app: postgres
+  replicas: 1
+  serviceName: webapp-postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: {{ .Values.postgresImage }}
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: {{ .Values.postgresDB }}
+        - name: POSTGRES_USER
+          value: {{ .Values.postgresUser }}
+        - name: POSTGRES_PASSWORD
+          value: {{ .Values.postgresPassword }}
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+  - metadata:
+      name: postgres-data
+    spec:
+      storageClassName: {{ .Values.postgresPVC.storageClassName }}
+      accessModes:
+        - {{ .Values.postgresPVC.accessModes }}
+      resources:
+        requests:
+          storage: {{ .Values.postgresPVC.storageSize }}
+

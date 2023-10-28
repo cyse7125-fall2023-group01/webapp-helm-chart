@@ -1,0 +1,57 @@
+# values.yaml
+
+nameOverride: ""
+fullnameOverride: ""
+webappImage:
+  repository: quay.io/csye7125_webapp/webapp-container-registry/webapp-http-check
+  tag: latest
+postgresHost: webapp-postgres
+env:
+  - name: POSTGRES_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: webapp-config
+        key: POSTGRES_HOST
+  - name: DATABASE_DSN
+    valueFrom:
+      configMapKeyRef:
+        name: webapp-config
+        key: DATABASE_DSN
+
+imagePullSecrets:
+  - name: quay-registry-secret
+
+replicaCount: 3
+deploymentStrategy: RollingUpdate
+maxSurge: 1
+maxUnavailable: 0
+minReadySeconds: 30
+progressDeadlineSeconds: 600
+
+postgresService:
+  name: postgres-service
+  selector:
+    app: postgres-container
+  port: 5432
+
+webappService:
+  name: webapp-service
+  selector:
+    app: webapp
+  port: 80
+  serviceType: LoadBalancer
+
+postgresPVC:
+  name: postgres-pvc
+  storageClassName: standard
+  accessModes: ReadWriteOnce
+  storageSize: 1Gi
+  volumeName: postgres-pv
+postgresImage: postgres:latest
+postgresDB: app
+postgresUser: postgres
+postgresPassword: postgres
+
+configMap:
+  POSTGRES_HOST: postgres-headless
+  DATABASE_DSN: user=postgres password=postgres dbname=app host=postgres-headless port=5432 sslmode=disable

@@ -1,0 +1,15 @@
+# templates/postgres-pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.postgresPVC.name }}
+  labels:
+    type: local
+spec:
+  storageClassName: {{ .Values.postgresPVC.storageClassName }}
+  accessModes:
+    - {{ .Values.postgresPVC.accessModes }}
+  resources:
+    requests:
+      storage: {{ .Values.postgresPVC.storageSize }}
+  volumeName: {{ .Values.postgresPVC.volumeName }}
