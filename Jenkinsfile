@@ -3,7 +3,7 @@ pipeline {
     
     environment {
         GITHUB_TOKEN = credentials('GITHUB_TOKEN')
-        NODEJS_HOME = tool name: 'NodeJS', type: 'Tool'
+        NODEJS_HOME = tool name: 'NodeJS', type: 'nodejs'
     }
     
     stages {
@@ -15,7 +15,7 @@ pipeline {
         
         stage('Setup Node.js') {
             steps {
-                tool name: 'NodeJS', type: 'Tool'
+                 tool name: 'NodeJS', type: 'nodejs'
             }
         }
         
