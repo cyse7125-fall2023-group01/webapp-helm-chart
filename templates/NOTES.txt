@@ -1,5 +1,50 @@
-{{- if eq .Values.webappService.serviceType "NodePort" }}
-export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ .Values.webappService.name }})
-export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
-echo http://$NODE_IP:$NODE_PORT
-{{- end }}
+# Helm Chart Notes
+
+This is a Helm chart used to deploy a web application for http checks with db migration. You can use this chart to customize and manage the deployment of your application on Kubernetes.
+
+## Prerequisites
+
+- Kubernetes cluster is up and running.
+- Helm is installed on your system.
+- Familiarity with Helm and Kubernetes concepts.
+
+## Installation
+
+To install the chart, use the following command:
+
+```shell
+helm install my-release ./my-chart
+Replace my-release with the desired release name and ./my-chart with the path to your Helm chart directory.
+
+Configuration
+You can customize the deployment by modifying values in the values.yaml file or by passing values using the --set flag during installation.
+
+For example, to set the service type to Loadbalancer:
+
+shell
+Copy code
+helm install my-release ./webapp-helm-chart --set webappService.serviceType=NodePort
+Upgrading
+To upgrade the chart, use the following command:
+
+shell
+Copy code
+helm upgrade my-release ./webapp-helm-chart
+You can also specify updated configuration values with the --set flag during an upgrade.
+
+Uninstallation
+To uninstall the release, use the following command:
+
+shell
+Copy code
+helm uninstall my-release
+Further Documentation
+For more detailed information, please refer to the documentation or README provided with the Helm chart.
+
+Happy Helm Chart Deployment!
+
+
+
+
+
+
