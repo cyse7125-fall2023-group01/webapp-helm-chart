@@ -20,6 +20,8 @@ pipeline {
 
         stage('release') {
             steps {
+                tool name: 'NodeJS', type: 'nodejs'
+                tool name: 'NodeJS', type: 'nodejs'
                 script {
                     
                     withCredentials([gitUsernamePassword(credentialsId: 'GITHUB_TOKEN', gitToolName: 'git')]) {
