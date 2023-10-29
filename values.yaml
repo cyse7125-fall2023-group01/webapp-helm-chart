@@ -38,7 +38,7 @@ webappService:
   name: webapp-service
   selector:
     app: webapp
-  port: 80
+  port: 8080
   serviceType: LoadBalancer
 
 postgresPVC:
