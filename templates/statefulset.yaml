@@ -25,9 +25,7 @@ spec:
           value: {{ .Values.postgresUser }}
         - name: POSTGRES_PASSWORD
           value: {{ .Values.postgresPassword }}
-        volumeMounts:
-        - name: postgres-data
-          mountPath: /var/lib/postgresql/data
+
   volumeClaimTemplates:
   - metadata:
       name: postgres-data
@@ -38,4 +36,3 @@ spec:
       resources:
         requests:
           storage: {{ .Values.postgresPVC.storageSize }}
-

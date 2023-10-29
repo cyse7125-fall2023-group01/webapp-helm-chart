@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     environment {
-        GITHUB_TOKEN = credentials('SRI_HARSHA_GITHUB_TOKEN')
+        GITHUB_TOKEN = credentials('GITHUB_TOKEN')
         NODEJS_HOME = tool name: 'NodeJS', type: 'Tool'
     }
     
