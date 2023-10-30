@@ -54,29 +54,33 @@ pipeline {
                     def latestVersion = env.LATEST_RELEASE_TAG
                     
                     // Update Chart.yaml's apiVersion
-                    sh "sed -i 's/^  apiVersion:.*/  apiVersion: ${latestVersion}/' ${chartPath}"
+                    sh "sed -i 's/version:.*/version: ${latestVersion}/' ${chartPath}"
+                    
+                    sh 'cat Chart.yaml'
+                    // sh 'helm upgrade ${latestVersion} Chart.yaml'
                     
                     sh 'gh version'
                 }
             }
         }
         
-        stage('Package and Release') {
-            steps {
-                script {
-                    def chartPath = "${WORKSPACE}"  // Update with your chart path
-                    def releaseVersion = "${env.LATEST_RELEASE_TAG}"
-                    
-                    sh 'ls ${chartPath}'
-                    
-                    // Create a tarball of the repository
-                    sh "tar -czvf ${chartPath}/webapp-helm-chart.tar.gz ./*"
-                    
-                    sh "gh release upload -R https://github.com/cyse7125-fall2023-group01/webapp-helm-chart.git ${releaseVersion} ${chartPath}/webapp-helm-chart.tar.gz"
-                    
-                }
-            }
+stage('Package and Release') {
+    steps {
+        script {
+            
+            def chartPath = "${WORKSPACE}"  // Update with your chart path
+            def releaseVersion = "${env.LATEST_RELEASE_TAG}"
+            
+            sh 'ls ${chartPath}'
+            
+            // Create a tarball of the repository
+            sh "tar -czvf ${chartPath}/webapp-helm-chart.tar.gz ./*"
+            
+            sh "gh release upload -R https://github.com/cyse7125-fall2023-group01/webapp-helm-chart.git ${releaseVersion} ${chartPath}/webapp-helm-chart.tar.gz"
+            
         }
+    }
+}
 
     }
 }
