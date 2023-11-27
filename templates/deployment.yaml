@@ -27,6 +27,7 @@ spec:
               value: postgres-headless
             - name: DB_URL
               value: jdbc:postgresql://$(POSTGRES_HOST):5432/app
+      serviceAccountName: httpcheck-operator
       containers:
         - name: webapp
           image: {{ .Values.webappImage.repository }}:{{ .Values.webappImage.tag }}
