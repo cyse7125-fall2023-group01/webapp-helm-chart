@@ -14,5 +14,5 @@ spec:
       port: {{ .Values.webappService.port }}
       targetPort: {{ .Values.webappService.port }}
   {{- if eq .Values.webappService.serviceType "LoadBalancer" }}
-  type: LoadBalancer
+  type: NodePort
   {{- end }}

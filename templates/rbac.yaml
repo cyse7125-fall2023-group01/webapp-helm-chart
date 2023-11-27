@@ -1,0 +1,41 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: httpcheck-operator
+rules:
+- apiGroups:
+  - monitoring.httpcheck.io
+  resources:
+  - cronjobs
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+  - deletecollection
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: httpcheck-operator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: httpcheck-operator
+subjects:
+- kind: ServiceAccount
+  name: httpcheck-operator
+  namespace: default
+
+---
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: httpcheck-operator
+  namespace: default
