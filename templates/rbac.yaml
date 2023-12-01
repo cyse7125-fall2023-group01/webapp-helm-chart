@@ -16,6 +16,9 @@ rules:
   - patch
   - delete
   - deletecollection
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get"]
 
 ---
 
