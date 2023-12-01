@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-db-access
+spec:
+  podSelector:
+    matchLabels:
+      app: postgres-headless
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: webapp
+    ports:
+    - protocol: TCP
+      port: 5432

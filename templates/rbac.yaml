@@ -30,7 +30,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: httpcheck-operator
-  namespace: default
+  namespace: webapp
 
 ---
 
@@ -38,4 +38,4 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: httpcheck-operator
-  namespace: default
+  namespace: webapp

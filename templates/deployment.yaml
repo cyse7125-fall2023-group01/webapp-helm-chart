@@ -2,9 +2,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Release.Name }}
+  labels:
+    app: webapp 
 spec:
   replicas: {{ .Values.replicaCount }}
-  selector:  # Add the selector here
+  selector:
     matchLabels:
       app: webapp
   strategy:
@@ -17,6 +19,16 @@ spec:
       labels:
         app: webapp  
     spec:
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - webapp
+              topologyKey: "topology.kubernetes.io/zone"
       initContainers:
         - name: flyway-init
           image: flyway/flyway
@@ -48,12 +60,14 @@ spec:
             httpGet:
               path: /healthz  
               port: 8080      
-            
-         
           ports:
             - containerPort: 80
+          resources:
+            limits:
+              cpu: 200m
+            requests:
+              cpu: 100m
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      
