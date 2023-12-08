@@ -39,11 +39,11 @@ webappService:
   selector:
     app: webapp
   port: 8080
-  serviceType: LoadBalancer
+  serviceType: ClusterIP
 
 postgresPVC:
   name: postgres-pvc
-  storageClassName: standard
+  storageClassName: local-path
   accessModes: ReadWriteOnce
   storageSize: 1Gi
   volumeName: postgres-pv
