@@ -13,6 +13,13 @@ spec:
     - protocol: TCP
       port: {{ .Values.webappService.port }}
       targetPort: {{ .Values.webappService.port }}
-  {{- if eq .Values.webappService.serviceType "LoadBalancer" }}
+  {{- if eq .Values.webappService.serviceType "ClusterIP" }}
+  type: ClusterIP
+  {{- else if eq .Values.webappService.serviceType "NodePort" }}
   type: NodePort
+  {{- else if eq .Values.webappService.serviceType "LoadBalancer" }}
+  type: LoadBalancer
   {{- end }}
+  
+
+
