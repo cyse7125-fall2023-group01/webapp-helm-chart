@@ -87,14 +87,23 @@ pipeline {
                     sh 'gcloud auth activate-service-account --key-file ~/gcp_sa_key.json'
                     sh 'gcloud container clusters get-credentials primary --region us-east1 --project csye7125-401203'
                     sh 'kubectl get pods'
-                    sh 'kubectl create namespace webapp'
-                    sh 'kubectl create namespace istio-system'
-                    sh 'kubectl create namespace istio-ingress'
+
+                    // Create the webapp namespace if it doesn't exist
+                    sh 'kubectl get namespace webapp || kubectl create namespace webapp'
+
+                    // Create the istio-system namespace if it doesn't exist
+                    sh 'kubectl get namespace istio-system || kubectl create namespace istio-system'
+
+                    // Create the istio-ingress namespace if it doesn't exist
+                    sh 'kubectl get namespace istio-ingress || kubectl create namespace istio-ingress'
+
                     sh 'helm repo add istio https://istio-release.storage.googleapis.com/charts'
                     sh 'helm install istio-base istio/base -n istio-system --set defaultRevision=default'
                     sh 'helm install istiod istio/istiod -n istio-system'
                     sh 'helm install istio-ingress istio/gateway -n istio-ingress'
+                    
                     sh 'kubectl label namespace webapp istio-injection=enabled'
+
                     sh 'rm -rf /var/lib/jenkins/webapp-helm-chart'
                     sh 'mkdir /var/lib/jenkins/webapp-helm-chart'
                     sh 'cp -R . /var/lib/jenkins/webapp-helm-chart'
