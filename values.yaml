@@ -3,7 +3,7 @@
 nameOverride: ""
 fullnameOverride: ""
 webappImage:
-  repository: quay.io/csye7125_webapp/webapp-container-registry/webapp-http-check
+  repository: quay.io/csye7125_webapp/webapp-container-registry/webapp-cr
   tag: latest
 postgresHost: webapp-postgres
 env:
