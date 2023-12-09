@@ -43,7 +43,7 @@ webappService:
 
 postgresPVC:
   name: postgres-pvc
-  storageClassName: local-path
+  storageClassName: standard
   accessModes: ReadWriteOnce
   storageSize: 1Gi
   volumeName: postgres-pv
