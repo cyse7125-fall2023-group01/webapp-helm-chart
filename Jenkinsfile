@@ -84,7 +84,23 @@ pipeline {
         stage('helm release or upgrade') {
             steps {
                 script {
-                    sh '/var/lib/jenkins/webapp-helm-chart-helm-release.sh'
+                    sh 'gcloud auth activate-service-account --key-file ~/gcp_sa_key.json'
+                    sh 'gcloud container clusters get-credentials primary --region us-east1 --project csye7125-401203'
+                    sh 'kubectl get pods'
+                    sh 'kubectl create namespace webapp'
+                    sh 'kubectl create namespace istio-system'
+                    sh 'kubectl create namespace istio-ingress'
+                    sh 'helm repo add istio https://istio-release.storage.googleapis.com/charts'
+                    sh 'helm install istio-base istio/base -n istio-system --set defaultRevision=default'
+                    sh 'helm install istiod istio/istiod -n istio-system'
+                    sh 'helm install istio-ingress istio/gateway -n istio-ingress'
+                    sh 'kubectl label namespace webapp istio-injection=enabled'
+                    sh 'rm -rf /var/lib/jenkins/webapp-helm-chart'
+                    sh 'mkdir /var/lib/jenkins/webapp-helm-chart'
+                    sh 'cp -R . /var/lib/jenkins/webapp-helm-chart'
+                    sh 'ls /var/lib/jenkins/webapp-helm-chart'
+                    sh '/var/lib/jenkins/webapp-helm-chart.sh'
+                    sh 'rm -rf /var/lib/jenkins/webapp-helm-chart'
                 }
             }
         }
