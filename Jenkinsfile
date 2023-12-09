@@ -64,26 +64,37 @@ pipeline {
             }
         }
         
-        stage('Package and Release') {
-            steps {
-                script {
+        // stage('Package and Release') {
+        //     steps {
+        //         script {
                     
-                    def chartPath = "${WORKSPACE}"  // Update with your chart path
-                    def releaseVersion = "${env.LATEST_RELEASE_TAG}"
+        //             def chartPath = "${WORKSPACE}"  // Update with your chart path
+        //             def releaseVersion = "${env.LATEST_RELEASE_TAG}"
                     
-                    sh 'ls ${chartPath}'
+        //             sh 'ls ${chartPath}'
                     
-                    // Create a tarball of the repository
-                    sh "tar -czvf ${chartPath}/webapp-helm-chart.tar.gz ./*"
+        //             // Create a tarball of the repository
+        //             sh "tar -czvf ${chartPath}/webapp-helm-chart.tar.gz ./*"
                     
-                    sh "gh release upload -R https://github.com/cyse7125-fall2023-group01/webapp-helm-chart.git ${releaseVersion} ${chartPath}/webapp-helm-chart.tar.gz"
+        //             sh "gh release upload -R https://github.com/cyse7125-fall2023-group01/webapp-helm-chart.git ${releaseVersion} ${chartPath}/webapp-helm-chart.tar.gz"
                     
-                }
-            }
-        }
+        //         }
+        //     }
+        // }
         stage('helm release or upgrade') {
             steps {
                 script {
+                    sh 'gcloud auth activate-service-account --key-file ~/gcp_sa_key.json'
+                    sh 'gcloud container clusters get-credentials primary --region us-east1 --project csye7125-401203'
+                    sh 'kubectl get pods'
+                    sh 'kubectl create namespace webapp'
+                    sh 'kubectl create namespace istio-system'
+                    sh 'kubectl create namespace istio-ingress'
+                    sh 'helm repo add istio https://istio-release.storage.googleapis.com/charts'
+                    sh 'helm install istio-base istio/base -n istio-system --set defaultRevision=default'
+                    sh 'helm install istiod istio/istiod -n istio-system'
+                    sh 'helm install istio-ingress istio/gateway -n istio-ingress'
+                    sh 'kubectl label namespace webapp istio-injection=enabled'
                     sh 'rm -rf /var/lib/jenkins/webapp-helm-chart'
                     sh 'mkdir /var/lib/jenkins/webapp-helm-chart'
                     sh 'cp -R . /var/lib/jenkins/webapp-helm-chart'
