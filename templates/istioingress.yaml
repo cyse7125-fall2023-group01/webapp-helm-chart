@@ -34,7 +34,7 @@ spec:
   tcp:
     - route:
         - destination:
-            host: webapp-service
+            host: webapp-service.webapp.svc.cluster.local
             port:
               number: 8080
 
@@ -53,7 +53,7 @@ spec:
   http:
     - route:
         - destination:
-            host: webapp-service
+            host: webapp-service.webapp.svc.cluster.local
             port:
               number: 8080
 
